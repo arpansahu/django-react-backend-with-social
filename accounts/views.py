@@ -34,6 +34,7 @@ class CustomUserCreate(APIView):
 
 class AccountDetails(RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    # serializer_class = [UserDetailsSerializer]
 
     def get(self, request, *args, **kwargs):
         # print(request.user)
