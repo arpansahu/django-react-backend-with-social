@@ -17,13 +17,89 @@ from .models import NewUser
 from .serializers import CustomUserSerializer, UserDetailsSerializer, ChangePasswordSerializer, UpdateUserSerializer, \
     ActivateAccount, ForgetPassword, ResetPassword
 from rest_framework.permissions import AllowAny
-import smtplib
 
 from .token import account_activation_token, password_reset_token
+from decouple import config
+import smtplib
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
-sender_email = "developmenthai95@gmail.com"
-password = "Tonystark302@"
+sender_email = config('EMAIL')
+password = config('PASS')
 
+
+# def send_mail_account_activate(reciever_email, user, SUBJECT="Activate Your Account"):
+#     port = 465  # For SSL
+#     smtp_server = "smtp.gmail.com"
+#     # message = render_to_string(template_name='account/activate_account_mail.html', context={
+#     #     'user': user,
+#     #     'protocol': 'http',
+#     #     'domain': 'www.localhost:3000/activate',
+#     #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+#     #     'token': account_activation_token.make_token(user),
+#     # })
+#
+#     # context = ssl.create_default_context()
+#     message = MIMEMultipart()
+#     message["Subject"] = "Accoutn Activation Email"
+#     message["From"] = sender_email
+#     message["To"] = reciever_email
+#
+#     text = """
+#     <!DOCTYPE html>
+#         <head>
+#             <style>
+#                 h1{position:absolute;text-align: center;}
+#                 img{width:100%;}
+#                 .container {
+#                                 position: relative;
+#                                 text-align: center;
+#                             }
+#                 .centered {
+#                                 position: absolute;
+#                                 z-index: 999;
+#                                 margin: 0 auto;
+#                                 left: 0;
+#                                 right: 0;
+#                                 top: 40%;
+#                                 text-align: center;
+#                                 width: 60%;
+#                             }
+#                 body{
+#                                 background-color:blue;
+#                                 background-repeat:no-repeat;
+#                 }
+#             </style>
+#         </head>
+#         """ + """
+#         <body>
+#             <h1>Hello {0}</h1>
+#             <br/>
+#             <div class ="container">
+#
+#                 <div class="centered">
+#                     <p>
+#                         To initiate the account acctivation process for your account on {{ domain }},
+#                         click the link below:
+#                         <br><br>
+#                         <a href="http://localhost:3000/{1}/{2}">Activate Your account here</a>
+#                         <br><br>
+#                         If clicking the link above doesn't work, please copy and paste the URL in a new browser
+#                         window instead.
+#                     </p>
+#                 </div>
+#             </div>
+#
+#             <br/>
+#         </body>
+#         </html>
+#     """.format(reciever_email, urlsafe_base64_encode(force_bytes(user.pk)), account_activation_token.make_token(user))
+#     part = MIMEText(text, "html")
+#     message.attach(part)
+#     with smtplib.SMTP_SSL(smtp_server, port) as server:
+#         server.login(sender_email, password)
+#         server.sendmail(sender_email, reciever_email, message)
 
 def send_mail_account_activate(reciever_email, user, SUBJECT="Activate Your Account"):
     port = 465  # For SSL
