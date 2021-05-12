@@ -46,7 +46,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_password_set = models.BooleanField(default=False)
     objects = CustomAccountManager()
-
+    is_email_verified = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name']
 
