@@ -13,20 +13,18 @@ from rest_framework.generics import UpdateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils.encoding import force_bytes
+
+from core.settings import SMTP_SERVER, SMTP_PORT, SMTP_PASSWORD, SMTP_EMAIL, DOMAIN
 from .models import NewUser
 from .serializers import CustomUserSerializer, UserDetailsSerializer, ChangePasswordSerializer, UpdateUserSerializer, \
     ActivateAccount, ForgetPassword, ResetPassword
 from rest_framework.permissions import AllowAny
 
 from .token import account_activation_token, password_reset_token
-from decouple import config
 import smtplib
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
-sender_email = config('EMAIL')
-password = config('PASS')
 
 
 # def send_mail_account_activate(reciever_email, user, SUBJECT="Activate Your Account"):
@@ -102,20 +100,21 @@ password = config('PASS')
 #         server.sendmail(sender_email, reciever_email, message)
 
 def send_mail_account_activate(reciever_email, user, SUBJECT="Activate Your Account"):
-    port = 465  # For SSL
-    smtp_server = "smtp.gmail.com"
+    port = 465
+    smtp_server = SMTP_SERVER
     message = render_to_string(template_name='account/activate_account_mail.html', context={
         'user': user,
         'protocol': 'http',
-        'domain': 'www.localhost:3000/activate',
+        'domain': DOMAIN + '/activate',
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
     context = ssl.create_default_context()
 
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(sender_email, reciever_email, message)
+        server.login(SMTP_EMAIL, SMTP_PASSWORD)
+        server.sendmail(SMTP_EMAIL, reciever_email, message)
+    print("account activation mail send")
 
 
 # class CustomUserCreate(APIView):
@@ -137,6 +136,7 @@ def send_mail_account_activate(reciever_email, user, SUBJECT="Activate Your Acco
 #             return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
 #         else:
 #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class CustomUserCreate(APIView):
     permission_classes = [AllowAny]
 
@@ -180,11 +180,11 @@ class AccountActivateView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = ActivateAccount(data=request.data)
         if serializer.is_valid():
-            print(serializer.data['uidb64'], serializer.data['token'])
+            # print(serializer.data['uidb64'], serializer.data['token'])
             try:
                 uid = force_text(urlsafe_base64_decode(serializer.data['uidb64']))
                 user = NewUser.objects.get(pk=uid)
-                print(uid, user)
+                # print(uid, user)
 
             except (TypeError, ValueError, OverflowError, NewUser.DoesNotExist) as e:
                 user = None
@@ -204,12 +204,12 @@ class AccountActivateView(APIView):
 
 
 def send_mail_password_reset(reciever_email, user, SUBJECT="Activate Your Account"):
-    port = 465  # For SSL
-    smtp_server = "smtp.gmail.com"
+    port = SMTP_PORT  # For SSL
+    smtp_server = SMTP_SERVER
     message = render_to_string(template_name='account/password_reset_mail.html', context={
         'user': user,
         'protocol': 'http',
-        'domain': 'www.localhost:3000/reset',
+        'domain': DOMAIN + '/reset',
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': password_reset_token.make_token(user),
     })
@@ -217,8 +217,8 @@ def send_mail_password_reset(reciever_email, user, SUBJECT="Activate Your Accoun
     context = ssl.create_default_context()
 
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(sender_email, reciever_email, message)
+        server.login(SMTP_EMAIL, SMTP_PASSWORD)
+        server.sendmail(SMTP_EMAIL, reciever_email, message)
 
 
 class ForgetPasswordView(APIView):
