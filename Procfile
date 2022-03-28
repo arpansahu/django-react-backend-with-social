@@ -1,2 +1,2 @@
-release: python manage.py migrate
-web: gunicorn core.wsgi
+release: ./release-tasks.sh
+web: gunicorn djangoProject.wsgi
