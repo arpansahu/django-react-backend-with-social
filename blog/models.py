@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from core.storage_backends import PublicMediaStorage
 
 
 def upload_to(instance, filename):
@@ -30,7 +31,7 @@ class Post(models.Model):
         Category, on_delete=models.PROTECT, default=1)
     title = models.CharField(max_length=250)
     image = models.ImageField(
-        _("Image"), upload_to=upload_to, default='posts/default.jpg')
+        _("Image"), upload_to=upload_to, default='posts/default.jpg', storage=PublicMediaStorage)
     excerpt = models.TextField(null=True)
     content = models.TextField()
     slug = models.SlugField(max_length=250, unique_for_date='published')
