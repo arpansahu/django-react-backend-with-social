@@ -39,9 +39,9 @@ This project is implementation for the following topics related to technologies 
 
 ## Demo
 
-Available at: https://django-project-api-crud-graphq.herokuapp.com/
+Backend Available at: https://django-project-api-crud-graphq.herokuapp.com/
 
-Front End Available at: https://react-materialui-complete.herokuapp.com/
+FrontEnd Available at: https://react-materialui-complete.herokuapp.com/
 
 Note: Both the projects are running on Free dynos of Heroku so Please makesure before accessing Frontend Project 
     awake the Backend by visiting the backend link
