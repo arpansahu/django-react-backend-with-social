@@ -223,3 +223,13 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, name, email'
 }
 SOCIAL_AUTH_USER_FIELDS = ['email', 'username', 'first_name', 'password']
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # During development only
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = SMTP_SERVER
+EMAIL_HOST_USER = SMTP_EMAIL
+EMAIL_HOST_PASSWORD = SMTP_PASSWORD
+EMAIL_PORT = SMTP_PORT
+EMAIL_USE_TLS = True
+
+PASSWORD_RESET_TIMEOUT = 60
