@@ -129,6 +129,7 @@ Configuring Django App for Heroku
     add whitenoise middleware
     add: procfile
     add: release-task.sh for running mutilple commands in run: section of procfile
+    make relase-task.sh executable : chmod +x release-tasks.sh 
 ```
 ## Documentation
 
