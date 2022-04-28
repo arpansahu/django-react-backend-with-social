@@ -21,8 +21,6 @@ This project is implementation for the following topics related to technologies 
 1. crud operations for Blog Model over REST API
 2. Build API Documentations using COREAPI (SWAGGER)
 
--Implemented Schema and Swahgger with CORE API 
-
 -Deployed on Heroku
 
 1. Used Heroku Postgres 
